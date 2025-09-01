@@ -28,6 +28,7 @@ const args = {
   ariaLabel: '',
   className: '',
   noTrailingSlash: false,
+  separator: '/',
   size: BREADCRUMB_SIZE.MEDIUM,
 };
 
@@ -47,6 +48,11 @@ const argTypes = {
     description:
       'Optional prop to omit the trailing slash for the breadcrumbs.',
   },
+  separator: {
+    control: 'text',
+    description:
+      'Optional prop to override the default separator between breadcrumb items.',
+  },
   size: {
     control: 'select',
     description: 'Specify the size of the Accordion.',
@@ -58,10 +64,12 @@ export const Default = {
   args,
   argTypes,
   render: (args) => {
-    const { className, ariaLabel, noTrailingSlash, size } = args ?? {};
+    const { className, ariaLabel, noTrailingSlash, separator, size } =
+      args ?? {};
     return html`
       <cds-breadcrumb
         ?no-trailing-slash="${noTrailingSlash}"
+        .separator="${separator}"
         .class="${className}"
         .size="${size}"
         aria-label="${ariaLabel}">
@@ -86,10 +94,12 @@ export const BreadcrumbWithOverflowMenu = {
   args,
   argTypes,
   render: (args) => {
-    const { ariaLabel, className, noTrailingSlash, size } = args ?? {};
+    const { ariaLabel, className, noTrailingSlash, separator, size } =
+      args ?? {};
     return html`
       <cds-breadcrumb
         ?no-trailing-slash="${noTrailingSlash}"
+        .separator="${separator}"
         .class="${className}"
         .size="${size}"
         aria-label="${ariaLabel}">

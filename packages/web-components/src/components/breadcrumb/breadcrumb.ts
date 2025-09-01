@@ -7,6 +7,7 @@
 
 import { classMap } from 'lit/directives/class-map.js';
 import { LitElement, html } from 'lit';
+import { styleMap } from 'lit/directives/style-map.js';
 import { property } from 'lit/decorators.js';
 import { prefix } from '../../globals/settings';
 import { BREADCRUMB_SIZE } from './defs';
@@ -24,6 +25,13 @@ class CDSBreadcrumb extends LitElement {
    */
   @property({ type: Boolean, reflect: true, attribute: 'no-trailing-slash' })
   noTrailingSlash = false;
+
+  /**
+   * Optional prop to override the default separator
+   * between breadcrumb items (default: `'/'`)
+   */
+  @property({ type: String, reflect: true })
+  separator = '/';
 
   /**
    * Specify the size of the Breadcrumb. Currently
@@ -44,6 +52,12 @@ class CDSBreadcrumb extends LitElement {
     items.forEach((item) => {
       (item as HTMLElement).setAttribute('size', this.size);
     });
+  }
+
+  private escapeSpecialCharacters(value: string) {
+    return value
+      .replace(/\\/g, '\\\\') // escape backslashes
+      .replace(/"/g, '\\"'); // escape double quotes
   }
 
   connectedCallback() {
@@ -72,8 +86,15 @@ class CDSBreadcrumb extends LitElement {
       [`${prefix}--breadcrumb--no-trailing-slash`]: this.noTrailingSlash,
       [`${prefix}--breadcrumb--sm`]: this.size === BREADCRUMB_SIZE.SMALL,
     });
+
+    const customBreadcrumbStyle = this.separator
+      ? {
+          ['--breadcrumb-separator' as any]: `"${this.escapeSpecialCharacters(this.separator)}"`,
+        }
+      : {};
+
     return html`
-      <ol class="${classes}">
+      <ol class="${classes}" style="${styleMap(customBreadcrumbStyle)}">
         <slot @slotchange="${this._handleSlotChange}"></slot>
       </ol>
     `;
